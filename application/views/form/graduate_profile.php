@@ -13,6 +13,9 @@ $_prov = $this->input->post('Province') ? $this->input->post('Province') : set_v
 $_loc = $this->input->post('LocationOfResidence') != NULL ? $this->input->post('LocationOfResidence') : set_value('LocationOfResidence');
 $_telno = $this->input->post('TelephoneNo') ? $this->input->post('TelephoneNo') : set_value('TelephoneNo');
 $_cellno = $this->input->post('CellphoneNo') ? $this->input->post('CellphoneNo') : set_value('CellphoneNo');
+$_college = $this->input->post('College') ? $this->input->post('College') : set_value('College');
+$_department = $this->input->post('Department') ? $this->input->post('Department') : set_value('Department');
+$_year_graduated = $this->input->post('YearGraduated') ? $this->input->post('YearGraduated') : set_value('YearGraduated');
 
 $form = array(
     'class'     => 'form-horizontal',
@@ -153,6 +156,30 @@ $cellphone = array(
     'maxlength'	=> 30,
     'value'     => $_cellno,
 );
+$college = array(
+    'name'  => 'College',
+    'class'     => 'form-control',
+    'id'    => 'College',
+    'maxlength' => 50,
+    'value'     => $_college,
+    'readonly' => ''
+);
+$department = array(
+    'name'  => 'Department',
+    'class'     => 'form-control',
+    'id'    => 'Department',
+    'maxlength' => 50,
+    'value'     => $_department,
+    'readonly' => ''
+);
+$year_graduated = array(
+    'name'  => 'YearGraduated',
+    'class'     => 'form-control',
+    'id'    => 'YearGraduated',
+    'maxlength' => 5,
+    'value'     => $_year_graduated,
+    'readonly' => ''
+);
 $submit = array(
     'name'	=> 'save_profile',
     'class'     => 'btn btn-primary',
@@ -233,6 +260,18 @@ if( ! empty($errors))
 <div class="form-group">
     <?php echo form_label('Cellphone Number', $cellphone['id'], $label); ?>
     <div class="col-sm-5"><?php echo form_input($cellphone); ?></div>
+</div>
+<div class="form-group">
+    <?php echo form_label('College', $college['id'], $label); ?>
+    <div class="col-sm-5"><?php echo form_input($college); ?></div>
+</div>
+<div class="form-group">
+    <?php echo form_label('Department', $department['id'], $label); ?>
+    <div class="col-sm-5"><?php echo form_input($department); ?></div>
+</div>
+<div class="form-group">
+    <?php echo form_label('Year Graduated', $year_graduated['id'], $label); ?>
+    <div class="col-sm-3"><?php echo form_input($year_graduated); ?></div>
 </div>
 <div class="form-group">
     <div class="col-sm-12 text-right"><?php echo form_submit($submit); ?></div>
