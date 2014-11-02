@@ -22,19 +22,29 @@ class Update extends CI_Controller
 	        	}
 	        }
 	        echo "<pre>";
-	        print_r($data);
+	        print_r(count($data));
 	        echo "</pre>";
 	        $i = 0;
 	        foreach ($data as $var) {
-	        	$lname = trim($var[0]);
-	        	$fname = trim($var[1]);
-	        	$mname = trim($var[2]);
-	        	$dept = trim($var[7]);
-	        	$clg = trim($var[6]);
-	        	$yr = trim($var[5]);
+	        	$lname = $var[0];
+	        	$fname = $var[1];
+	        	$mname = $var[2];
+	        	$clg = ($file == '2011' OR $file == '2013') ? trim($var[3]) : trim($var[6]);
+	        	$dept = ($file == '2011' OR $file == '2013') ? trim($var[4]) : trim($var[7]);
+	        	$yr = $file;
 	        	$info = $this->db->like(array('LastName' => $lname, 'FirstName' => $fname, 'MiddleName' => $mname))->get('graduates');
+	        	$trimmed = $this->db->like( array( 'LastName' => trim($lname), 'FirstName' => trim($fname), 'MiddleName' => trim($mname) ) )->get('graduates');
 	        	if($info->num_rows() > 0){
 	        		$row = $info->row();
+	        		$grad_id = $row->GraduateId;
+	        		$update = array(
+	        			'Department' => $dept,
+	        			'College' => $clg
+        			);
+	        		$this->db->where('GraduateId', $grad_id)->update('graduates', $update);
+	        		++$i;
+	        	} elseif($trimmed->num_rows() > 0) {
+	        		$row = $trimmed->row();
 	        		$grad_id = $row->GraduateId;
 	        		$update = array(
 	        			'Department' => $dept,

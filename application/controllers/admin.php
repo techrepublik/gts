@@ -41,7 +41,7 @@ class Admin extends CI_Controller {
             $this->load->library('table');
             $tmpl = array ( 'table_open'  => '<table class="table">' );
             $this->table->set_template($tmpl); 
-            $this->table->set_heading(array('Last Name', 'First Name', 'Middle Name', 'Ext.', 'New Last Name', 'Civil Status', 'Birth Date', 'Sex', 'Region', 'Location'));
+            $this->table->set_heading(array('Last Name', 'First Name', 'Middle Name', 'College', 'Department', 'Civil Status', 'Birth Date', 'Sex', 'Region', 'Location'));
             $year_graduated = $this->input->post('year_graduated');
             $college_post = $this->input->post('college');
             $department_post = $this->input->post('department');
@@ -67,12 +67,12 @@ class Admin extends CI_Controller {
                     $where['Department'] = $department;
                 }
                 $graduates = $this->Graduates->get_where($where, $limit, $offset + 1);
-                $total_graduates = count($this->Graduates->get_where(array('YearGraduated' => $year)));
+                $total_graduates = count($this->Graduates->get_where($where));
             }
             
             $this->load->library('pagination');
             $config['base_url'] = base_url() . 'index.php/admin/graduate_list/' . $year . '/' . $college . '/' . $department . '/' . $limit . '/';
-            $config['uri_segment'] = 5;
+            $config['uri_segment'] = 7;
             $config['total_rows'] = $total_graduates;
             $config['per_page'] = $limit;
             $config['full_tag_open'] = '<div class="navigation"><ul class="pagination pagination-sm">';
@@ -111,7 +111,7 @@ class Admin extends CI_Controller {
                     } elseif ($graduate->Sex == 0 && !is_null($graduate->Sex)){
                         $location = 'Municipality';
                     }
-                    $this->table->add_row(array($graduate->LastName, $graduate->FirstName, $graduate->MiddleName, $graduate->ExtensionName, $graduate->LastName01, $graduate->CivilStatus, $graduate->BirthDate, $sex, $graduate->RegionOfOrigin, $location));
+                    $this->table->add_row(array($graduate->LastName, $graduate->FirstName, $graduate->MiddleName, $graduate->College, $graduate->Department, $graduate->CivilStatus, $graduate->BirthDate, $sex, $graduate->RegionOfOrigin, $location));
                 }
             }
             
@@ -131,9 +131,28 @@ class Admin extends CI_Controller {
                 '2013'  => '2013'
             );
 
-            $year_dropdown = form_dropdown('year_graduated', $options, $year, 'class="form-control"');
-            $college_dropdown = form_dropdown('college', array(), NULL, 'class="form-control" disabled');
-            $department_dropdown = form_dropdown('department', array(), NULL, 'class="form-control" disabled');
+            $colleges = array(
+                'All'   => 'All'
+            );
+            $departments = array(
+                'All'   => 'All'
+            );
+            $get_colleges = $this->db->distinct()->group_by('College')->get('graduates');
+            if($get_colleges->num_rows() > 0){
+                foreach ($get_colleges->result() as $row){
+                    if(! empty($row->College)) $colleges[$row->College] = $row->College;
+                }
+            }
+            $get_departments = $this->db->distinct()->group_by('Department')->get_where('graduates', array( 'College' => $college ));
+            if($get_departments->num_rows() > 0){
+                foreach ($get_departments->result() as $row){
+                    if(! empty($row->Department)) $departments[$row->Department] = $row->Department;
+                }
+            }
+
+            $year_dropdown = form_dropdown('year_graduated', $options, $year, 'class="form-control" id="year_graduated"');
+            $college_dropdown = form_dropdown('college', $colleges, $college, 'class="form-control" id="college"');
+            $department_dropdown = form_dropdown('department', $departments, $department, 'class="form-control" id="department"');
             
             $data['graduates'] = $this->table->generate();
             $data['pagination'] = $pagination;

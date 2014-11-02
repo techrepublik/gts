@@ -175,6 +175,23 @@ $('select.answer-selection').on('change', function(){
     }
 });
 
+$('#college').on('change', function(){
+    console.log($(this).val());
+    get_dept($(this).val());
+});
+
+function get_dept(college){
+    $.post(base_url+'index.php/request/get_departments/'+college, function(data){
+        console.log(data);
+        data = JSON.parse(data);
+        $('#department').html('');
+        $.each(data, function(key, value) {
+             $('#department').append('<option value="' + key + '">' + value + '</option>');
+        });
+        $('#department').val('All');
+    });
+}
+
 var enforceModalFocusFn = $.fn.modal.Constructor.prototype.enforceFocus;
 
 $.fn.modal.Constructor.prototype.enforceFocus = function() {};

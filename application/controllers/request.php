@@ -110,6 +110,23 @@ class Request extends CI_Controller {
         $this->output->set_header('Content-Type: application/json');
         echo $json;
     }
+
+    public function get_departments($college = null)
+    {
+        $json = 0;
+        $departments = array(
+            'All'   => 'All'
+        );
+        $get_departments = $this->db->distinct()->group_by('Department')->get_where('graduates', array( 'College' => $college ));
+        if($get_departments->num_rows() > 0){
+            foreach ($get_departments->result() as $row){
+                if(! empty($row->Department)) $departments[$row->Department] = $row->Department;
+            }
+        }
+        $json = json_encode($departments);
+        $this->output->set_header('Content-Type: application/json');
+        echo $json;
+    }
 }
 
 /* End of file request.php */
