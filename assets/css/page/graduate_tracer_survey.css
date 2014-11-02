@@ -1,0 +1,20 @@
+#item_14 .row {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#item_14 .col-sm-3 {
+    text-align:center;
+    vertical-align:middle;
+}
+
+.tooltip-inner {
+    max-width: 500px !important;
+    text-align: left;
+}
+
+.fields > [class*="fields_"]:not(.fields_0) {
+    border-top: 1px gray dashed;
+    margin-left: 0;
+    margin-right: 0;
+}
