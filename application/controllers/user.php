@@ -130,10 +130,6 @@ class User extends CI_Controller {
             $this->form_validation->set_rules('Province', 'Province', 'trim');
             $this->form_validation->set_rules('TelephoneNo', 'Telephone Number', 'trim');
             $this->form_validation->set_rules('CellphoneNo', 'Cellphone Number', 'trim');
-            $this->form_validation->set_rules('YearGraduated', 'Year Graduated', 'trim');
-            $this->form_validation->set_rules('College', 'College', 'trim');
-            $this->form_validation->set_rules('Department', 'Department', 'trim');
-            $this->form_validation->set_rules('Verified', 'Verified', 'trim');
             if ($this->form_validation->run() == FALSE) {
                 $data['errors'] = validation_errors();
             } else {
@@ -156,10 +152,6 @@ class User extends CI_Controller {
                 $this->Graduates->LocationOfResidence = (int) $this->input->post('LocationOfResidence');
                 $this->Graduates->TelephoneNo = $this->form_validation->set_value('TelephoneNo');
                 $this->Graduates->CellphoneNo = $this->form_validation->set_value('CellphoneNo');
-                $this->Graduates->YearGraduated = $this->form_validation->set_value('YearGraduated');
-                $this->Graduates->College = $this->form_validation->set_value('College');
-                $this->Graduates->Department = $this->form_validation->set_value('Department');
-                $this->Graduates->Verified = $this->form_validation->set_value('Verified');
                 $this->Graduates->user_id = $this->tank_auth->get_user_id();
                 $this->Graduates->save();
                 $this->session->unset_userdata('graduate');
