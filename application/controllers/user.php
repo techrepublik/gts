@@ -133,6 +133,7 @@ class User extends CI_Controller {
             $this->form_validation->set_rules('College', 'College', 'trim');
             $this->form_validation->set_rules('Department', 'Department', 'trim');
             $this->form_validation->set_rules('YearGraduated', 'YearGraduated', 'trim');
+            $this->form_validation->set_rules('Verified', 'Verified', 'trim');
             if ($this->form_validation->run() == FALSE) {
                 $data['errors'] = validation_errors();
             } else {
@@ -158,6 +159,7 @@ class User extends CI_Controller {
                 $this->Graduates->College = $this->form_validation->set_rules('College');
                 $this->Graduates->Department = $this->form_validation->set_rules('Department');
                 $this->Graduates->YearGraduated = $this->form_validation->set_rules('YearGraduated');
+                $this->Graduates->Verified = (int) $this->form_validation->set_rules('Verified');
                 $this->Graduates->user_id = $this->tank_auth->get_user_id();
                 $this->Graduates->save();
                 $this->session->unset_userdata('graduate');
