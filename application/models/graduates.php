@@ -154,5 +154,11 @@ class Graduates extends MY_Model {
      * @var string
      */
     public $Picture;
+
+    /**
+     * Verified.
+     * @var tinyint
+    */
+    public $Verified;
     
 }
