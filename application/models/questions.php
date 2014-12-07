@@ -24,12 +24,12 @@ class Questions extends MY_Model {
         return NULL;
     }
     
-    public function get_question_answers($GraduateId)
+    public function get_question_answers($GraduateId, $QuestionId = 4)
     {
         $data = array();
         $join = $this->db->join('answerfields','answers.AnswerFieldId = answerfields.AnswerFieldId','left')
                     ->join('questions','answerfields.QuestionId = questions.QuestionId','left')
-                    ->get_where('answers', array('answers.GraduateId' => $GraduateId, 'questions.IsVisible' => 1, 'questions.QuestionId >' => 4));
+                    ->get_where('answers', array('answers.GraduateId' => $GraduateId, 'questions.IsVisible' => 1, 'questions.QuestionId >' => $QuestionId));
         
         if ($join->num_rows() > 0)
         {

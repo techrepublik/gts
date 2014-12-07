@@ -27,6 +27,55 @@ class Graduates extends MY_Model {
         $query = $this->db->like($like)->get('graduates');
         $this->populate($query->row(),$post);
     }
+
+    public function graduates_summary($var = 'College'){
+        $where = array(
+            'user_id IS NOT NULL' => NULL,
+            'user_id <>' => 'NULL',
+            'user_id <>' => ''
+        );
+
+        if($var == 'BirthDate'){
+            $query = $this->db
+            ->select($var.', TIMESTAMPDIFF(YEAR, `BirthDate`,CURDATE()) as age, COUNT(*) as total')
+            ->group_by('age')->get_where($this::DB_TABLE, $where);
+        } else {
+            $query = $this->db->select($var.', COUNT(*) as total')->group_by($var)->get_where($this::DB_TABLE, $where);
+        }
+        return $query->result();
+    }
+    /*
+    SELECT answers.AnswerValue, COUNT(*) as total 
+    FROM graduates 
+    LEFT JOIN answers ON graduates.GraduateId = answers.GraduateId 
+    RIGHT JOIN answerfields ON answers.AnswerFieldId = answerfields.AnswerFieldId
+    RIGHT JOIN questions ON answerfields.QuestionId = questions.QuestionId 
+    WHERE 
+    graduates.user_id IS NOT NULL
+    AND graduates.user_id <> '' 
+    AND questions.QuestionId = 3 
+    AND answerfields.AnswerFieldId = 8 // IF PRESENT
+    AND questions.IsVisible = 1 
+    GROUP BY answers.AnswerValue
+    */
+    public function answer_summary($question_id = 0, $field_id = 0){
+        $where = array(
+            'questions.QuestionId' => $question_id,
+            'questions.IsVisible' => 1,
+            'graduates.user_id IS NOT NULL' => NULL,
+            'graduates.user_id <>' => 'NULL',
+            'graduates.user_id <>' => ''
+        );
+        if($field_id > 0) $where['answerfields.AnswerFieldId'] = $field_id;
+
+        $query = $this->db->select('answers.AnswerValue, COUNT(*) as total')
+            ->join('answers', 'graduates.GraduateId = answers.GraduateId', 'left')
+            ->join('answerfields','answers.AnswerFieldId = answerfields.AnswerFieldId','right')
+            ->join('questions','answerfields.QuestionId = questions.QuestionId','right')
+            ->group_by('answers.AnswerValue')
+            ->get_where($this::DB_TABLE, $where);
+        return $query->result();
+    }
     
     /**
      * Graduate unique identifier.
@@ -154,12 +203,5 @@ class Graduates extends MY_Model {
      * @var string
      */
     public $Picture;
-
-
-    /**
-     * Verifiy student
-     * @var tinyint
-    */
-    public $Verified
     
 }
